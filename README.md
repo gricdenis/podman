@@ -123,7 +123,7 @@ su -
 
 - [ ] Как описать _сценарий_ использования команд?
 ```shell
-- каоманды перевода системы в нужное состояние
+- команды перевода системы в нужное состояние
 - команды действия
 - команды проверки успешности и корректности действия 
 ``` 
@@ -135,7 +135,7 @@ su -
 - [podman cli reference](https://docs.podman.io/en/latest/Commands.html)
 
 
-When участники *именуют сценарии*, выполняют команды и анализируют их вывод и поведение
+When участники *убеждаются, что все установлено и работает*, выполняют команды и анализируют их вывод и поведение
 ----
 - Сценарий "Как ...?"
 ```shell
@@ -144,7 +144,7 @@ podman system info
 podman system df
 ```
 
-- Сценарий "Как ...?"
+- Сценарий "Как подключиться к registry?"
 ```shell
 podman logout
 podman login {{ registry-host }}
@@ -153,17 +153,19 @@ podman login {{ registry-host }}
 - Сценарий "Как найти нужный образ в registry?"
 Залогиниться браузером по адресу {{ registry-host }}, в поиске найти нужный образ и скопировать полное символьное имя (включая сетевой адрес хоста).
 
-- Сценарий "Как ...?"
+- Сценарий "Как локально скачать образ к себе на машину?"
 ```shell
 podman image pull {{ registry-host }}/{{ os-images-path }}/alpine:3.14
 podman system df
 ````
 
-- Сценарий "Как ...?"
+- Сценарий "Как проверить,что подман запускает контейнеры?"
 ```shell
 podman container run hello
 
 podman container run --name demo -it {{ registry-host }}/{{ os-images-path }}/alpine:3.14
+podman container run --name demo -it alpine:3.23
+
 /# cat /etc/os-release
 /# exit 
 ```
