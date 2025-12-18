@@ -148,6 +148,7 @@ podman system df
 ```shell
 podman logout
 podman login {{ registry-host }}
+podman login --get-login docker.io #у подмана реджистри не указываются, но косвенно можно так
 ```
 
 - Сценарий "Как найти нужный образ в registry?"
@@ -285,32 +286,40 @@ When участники именуют сценарии, выполняют ко
 ----
 - Сценарий "Как ...?"
 ```shell
-podman image ls # TODO: собственные пометки участников для будущего использования в проектах
+podman image ls # для sudo результат иной
 ```
 
-- Сценарий "Как ...?"
+- Сценарий "Как загрузить образ из реджистри?"
 ```shell
 podman image pull {{ registry-host }}/{{ os-images-path }}/alpine:3.14
+podman image pull docker.io/alpine:3.23
 podman image ls
 ```
 
-- Сценарий "Как ...?"
+- Сценарий "Как узнать доп инфу по образу (в тч CMD/Entrypoint)?"
 ```shell
 podman image history {{ registry-host }}/{{ os-images-path }}/alpine:3.14
 podman image inspect {{ registry-host }}/{{ os-images-path }}/alpine:3.14 [| jq]
+podman image history docker.io/alpine:3.23
+podman image inspect docker.io/alpine:3.23 | jq
+
+
 ```
 
-- Сценарий "Как ...?"
+- Сценарий "Как сохранить изменения локально?"
 ```shell
 podman container run --name demo -it {{ registry-host }}/{{ os-images-path }}/alpine:3.14
+podman container run --name demo -it alpine:3.22
+
 /# touch side-effect.txt
 /# exit
 podman container diff demo
-podman container commit demo {{ registry-host }}/container-training-docker/{{ registry-account }}/demo
+podman container commit demo {{ registry-host }}/container-training-docker/{{ registry-account }}/
+podman container commit demo localhost/new_image
 podman image ls
 ```
 
-- Сценарий "Как ...?"
+- Сценарий "Каксделать еще один тэг?"
 ```shell
 podman image tag {{ registry-host }}/container-training-docker/{{ registry-account }}/demo:latest {{ registry-host }}/container-training-docker/{{ registry-account }}/demo:1.0.0
 podman image ls
@@ -319,9 +328,11 @@ podman image ls
 - Сценарий "Как ...?"
 ```shell
 podman image push {{ registry-host }}/container-training-docker/{{ registry-account }}/demo:1.0.0
+#в докерхаб у меня не получилось
+#podman image push e0b77b7c3f53 docker.io/library/xforce3000/test:1.0.2
 ```
 
-- Сценарий "Как ...?"
+- Сценарий "Как скачанные образы, у которых 0 запущенных контейнеров?"
 ```shell
 podman image ls
 podman container rm demo
@@ -450,39 +461,43 @@ podman container prune ...
 
 - Сценарий "Как создать под?"
 ```shell
-podman ...
+podman pod create
+podman pod ls
 ```
 
 - Сценарий "Как запустить контейнер с добавлением его в под?"
 ```shell
-podman ...
+podman pod ls
+podman container run -d --name test_alpine --pod f4ea6b9846b7 alpine:3.16
 ```
 
 - Сценарий "Как посмотреть список подов?"
 ```shell
-podman ...
+podman pod ls
+podman pod ps
 ```
 
 - Сценарий "Как посмотреть список контейнеров в поде?"
 ```shell
 podman pod ps
 podman ps -a --pod
-podman pod inspect ...
+podman pod inspect f4ea6b9846b7
 ```
 
 - Сценарий "Как посмотреть логи контейнеров в поде?"
 ```shell
-podman logs --latest ...
+#podman logs --latest f4ea6b9846b7
 ```
 
 - Сценарий "Как сгенерировать k8s manifest из готового пода?"
 ```shell
-podman generate kube ...
+podman pod ps
+podman kube generate ...
 ```
 
 - Сценарий "Как остановить под?"
 ```shell
-podman ...
+podman pod stop pod-name
 ```
 
 Then участники делятся проблемами и отвечают на вопросы
